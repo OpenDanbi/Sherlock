@@ -146,6 +146,10 @@ class MainWindow(QWidget):
             idx = argv.index('-s')
             src_path = argv[idx+1]
 
+        if '-c' in argv:
+            idx = argv.index('-c')
+            cfg_file = argv[idx+1]
+
         QWidget.__init__(self)
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
@@ -161,7 +165,7 @@ class MainWindow(QWidget):
         hbox.addLayout(vbox)
         hbox.addLayout(toolBox)
 
-        controller = Kitchen.Kitchen(mode,arg_file)
+        controller = Kitchen.Kitchen(mode,arg_file,cfg_file)
         controller.connectView(scrollView.mainView.drawer)
         controller.connectToolBox(toolBox)
         controller.start()

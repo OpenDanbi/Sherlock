@@ -17,7 +17,7 @@ import io
 
 class Kitchen(threading.Thread):
    
-    def __init__(self,mode,fileArg):
+    def __init__(self,mode,fileArg,cfgArg):
         threading.Thread.__init__(self)
         
         self.lifeLine = []
@@ -26,6 +26,7 @@ class Kitchen(threading.Thread):
 
         self.mode = mode
         self.argFile = fileArg
+        self.cfgFile = cfgArg
         self.flag_capture_start = False
         self.flag_capture_stop = False
         self.cnt = 0
@@ -98,6 +99,34 @@ class Kitchen(threading.Thread):
         for _i in idx_for_remove:
             del input_dat[_i]
 
+        cfg_file_in = open(self.cfgFile,"r", encoding='utf-8', errors='ignore')
+        
+        cfg_time_index = 0
+        cfg_thread_index = 0
+        cfg_flowtype_index = 0
+        cfg_methodname_index = 0
+        cfg_ignore_str = None
+
+        for line in cfg_file_in:
+            if '[time]' in line:
+                str = line.split('[time]')
+                cfg_time_index = int(str[1])
+            elif '[thread]' in line:
+                str = line.split('[thread]')
+                cfg_thread_index = int(str[1])
+            elif '[flowtype]' in line:
+                str = line.split('[flowtype]')
+                cfg_flowtype_index = int(str[1])
+            elif '[methodname]' in line:
+                str = line.split('[methodname]')
+                cfg_methodname_index = int(str[1])
+            elif '[ignore]' in line:
+                str = line.split('[ignore]')
+                cfg_ignore_str = str[1].split(',')
+        cfg_file_in.close()
+
+        print("%d,%d,%d,%d" % (cfg_time_index,cfg_thread_index,cfg_flowtype_index,cfg_methodname_index))
+
         index = 0        
         for idx, line in enumerate(input_dat):
             if re.match("(.*)SHERLOCK/PROFILING(.*)",line):
@@ -105,11 +134,12 @@ class Kitchen(threading.Thread):
                 if len(str_list) < 9:
                     print("input line has some errors : %s"%line)
                     continue
-                event_time = str_list[1]
-                thread_id = str_list[3]
-                flow_type = str_list[6]
-                method_name_index = 8
-                #method_name_index = 10 if str_list[8] in ['static', 'synchronized'] else 9 if str_list[8] in ['public', 'private', 'protected'] else 8
+
+                event_time = str_list[cfg_time_index]
+                thread_id = str_list[cfg_thread_index]
+                flow_type = str_list[cfg_flowtype_index]
+                method_name_index = cfg_methodname_index
+
                 package_method_name = ''
                 for _i in range(method_name_index,len(str_list)):
                     package_method_name += str_list[_i]
