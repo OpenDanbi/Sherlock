@@ -130,7 +130,12 @@ class Kitchen(threading.Thread):
         index = 0        
         for idx, line in enumerate(input_dat):
             if re.match("(.*)SHERLOCK/PROFILING(.*)",line):
-                str_list = line.replace('static','').replace('synchronized','').replace('public','').replace('private','').replace('protected','').split()
+                str_list = line[:]
+                for word in cfg_ignore_str:
+                    str_list = str_list.replace(word,'')
+                str_list = str_list.split()
+
+                #str_list = line.replace('static','').replace('synchronized','').replace('public','').replace('private','').replace('protected','').split()
                 if len(str_list) < 9:
                     print("input line has some errors : %s"%line)
                     continue
