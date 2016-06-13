@@ -60,9 +60,6 @@ class ToolBox(QVBoxLayout):
         self.buttonGroupName = QPushButton('Group')
         self.buttonGroupName.clicked.connect(self.addGroupName)
         self.addWidget(self.buttonGroupName)
-        self.listGroupName = QListWidget()
-        self.listGroupName.setFixedWidth(200)
-        self.addWidget(self.listGroupName)
 
         self.addWidget(self.groupBoxMessageInfo)
 
@@ -75,7 +72,6 @@ class ToolBox(QVBoxLayout):
         print("cluster name is %s" % cluster_name)
         if self.diagramView.createCluster(cluster_name):
             item = QtGui.QListWidgetItem(cluster_name)
-            self.listGroupName.addItem(item)
         else:
             pass
 
@@ -115,11 +111,18 @@ class ToolBox(QVBoxLayout):
         self.diagramView.hideAllMessageSelected()
 
     def addThreadList(self,threads):
+
+        self.groupBoxThreadInfo = QGroupBox("Thread Info.")
+        self.groupBoxThreadInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
+
+        vbox = QVBoxLayout()
         self.listThread = QListWidget()
         self.listThread.setFixedWidth(200)
         self.listThread.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         QtCore.QObject.connect(self.listThread, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.toggleThreadDisplay)
-        self.addWidget(self.listThread)
+        vbox.addWidget(self.listThread)
+        self.groupBoxThreadInfo.setLayout(vbox)
+        self.addWidget(self.groupBoxThreadInfo)
 
         for id in threads:
             item = QtGui.QListWidgetItem(id)
