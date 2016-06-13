@@ -2,6 +2,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QLabel
 
 import Utils
+import ClusterDialog
 
 class HeadInfo(object):
     @Utils.argumentsToAttributes
@@ -31,6 +32,10 @@ class Header(QLabel):
         self.deleteAct.setStatusTip('Hide this life-line')
         self.deleteAct.triggered.connect(self.hideLifeLine)
 
+        self.groupAct = QtGui.QAction('Make a cluster', self)
+        self.groupAct.setStatusTip('Make a cluster of multiple life-lines')
+        self.groupAct.triggered.connect(self.showClusterDialog)
+
     def connectMainView(self,mainView):
         """
         mainView contains sequence diagram
@@ -51,7 +56,17 @@ class Header(QLabel):
                     menu.addAction('Scatter')
                 else:
                     menu.addAction(self.deleteAct)
+                    menu.addAction(self.groupAct)
                 menu.exec_(QtGui.QCursor.pos())
+
+    def showClusterDialog(self):
+        response, cluster_name = ClusterDialog.ClusterDialog.getClusterName([])
+        
+        print("cluster name is %s" % cluster_name)
+        if self.mainView.createCluster(cluster_name):
+            pass
+        else:
+            pass
 
     def hideLifeLine(self):
         print("Remove %s" % self.selectedHeader['name']) 
