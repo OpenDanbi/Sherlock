@@ -66,6 +66,8 @@ class CaptainServer(object):
         self.limitSearchTopIndex = 0
         if self.headerView:
             self.headerView.reset()
+        if self.toolBox:
+            self.toolBox.reset()
 
     def getLifeLines(self):
         return self.lifeLine

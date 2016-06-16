@@ -2,6 +2,7 @@ from PySide import QtCore, QtGui
 from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabel, QListWidget, QGroupBox, QCheckBox, QLineEdit, QInputDialog, QTableWidget, QTableWidgetItem
 
 import ClusterDialog
+import const
 
 class ToolBox(QVBoxLayout):
 
@@ -111,6 +112,10 @@ class ToolBox(QVBoxLayout):
         self.addWidget(self.groupBoxMessageInfo)
         self.groupBoxMessageInfo.setSizePolicy(self.sizePolicy)
 
+    def reset(self):
+        for idx in reversed(range(0,self.listThread.count())):
+            self.listThread.takeItem(idx):
+
     def setMsgInfoMessage(self,msg):
         self.strMessage = msg
 
@@ -156,6 +161,22 @@ class ToolBox(QVBoxLayout):
             for idx in range(0,self.tableRet.rowCount()):
                 self.tableRet.item(idx,1).setText('')
                 self.tableRet.item(idx,0).setText('')
+
+    def notifyInteractiveStateChanged(self,state):
+        if const.STATE_INTERACTIVE_CAPTURING == state:
+            self.buttonCapture.setEnabled(True)
+            self.buttonCapture.setText('Stop Capture')
+        if const.STATE_INTERACTIVE_PROCESSING == state:
+            self.buttonCapture.setEnabled(False)
+        if const.STATE_INTERACTIVE_IDLE == state:
+            self.buttonCapture.setEnabled(True)
+            self.buttonCapture.setText('Capture')
+        if const.STATE_INTERACTIVE_RESET == state:
+            self.buttonCapture.setEnabled(True)
+            self.buttonCapture.setText('Capture')
+        elif const.STATE_INTERACTIVE_ACTIVE == state:
+            self.buttonCapture.setEnabled(True)
+            self.buttonCapture.setText('Capture')
 
     def setMessageInfo(self,info):
         self.msgInfo.setText(info)

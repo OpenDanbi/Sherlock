@@ -143,7 +143,7 @@ class Kitchen(threading.Thread):
                 cfg_methodname_index = int(str[1])
             elif '[ignore]' in line:
                 str = line.split('[ignore]')
-                cfg_ignore_str = str[1].split(',')
+                cfg_ignore_str = str[1].replace(' ','').replace('\n','').split(',')
             elif '[argseperator]' in line:
                 str = line.split('[argseperator]')
                 cfg_arg_seperator = str[1].replace(' ','').replace('\n','')
@@ -241,6 +241,9 @@ class Kitchen(threading.Thread):
             self.setInteractiveModeState(const.STATE_INTERACTIVE_RESET)
 
     def setInteractiveModeState(self,state):
+        
+        self.toolBox.notifyInteractiveStateChanged(state)
+
         if const.STATE_INTERACTIVE_RESET == state:
             print("setInteractiveModeState : STATE_INTERACTIVE_RESET")
             if const.STATE_INTERACTIVE_ACTIVE != self.stateInteractive:
