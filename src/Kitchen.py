@@ -7,7 +7,7 @@ author: Bak Hyeonjae
 """
 import threading
 import time
-from threading import Timer
+from threading import Timer, Lock
 from copy import deepcopy
 import Stack
 import re
@@ -16,19 +16,33 @@ import const
 import io
 
 class Kitchen(threading.Thread):
+
+    input_stream = None
    
     def __init__(self,mode,fileArg,cfgArg):
         threading.Thread.__init__(self)
-        
-        self.lifeLine = []
-        self.callStack = [] #Stack.Stack()
-        self.threads = []
-
+       
         self.mode = mode
         self.argFile = fileArg
         self.cfgFile = cfgArg
-        self.flag_capture_start = False
-        self.flag_capture_stop = False
+        self.mutex = Lock()
+
+        self.reset()
+
+        const.STATE_INTERACTIVE_IDLE = 0
+        const.STATE_INTERACTIVE_CAPTURING = 1
+        const.STATE_INTERACTIVE_PROCESSING = 2
+        const.STATE_INTERACTIVE_ACTIVE = 3
+        const.STATE_INTERACTIVE_RESET = 4
+        self.stateInteractive = const.STATE_INTERACTIVE_IDLE
+
+        if const.mode_interactive = self.mode:
+            self.input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors='ignore')
+
+    def reset(self)
+        self.lifeLine = []
+        self.callStack = [] #Stack.Stack()
+        self.threads = []
         self.cnt = 0
 
     def connectView(self,view):
@@ -38,10 +52,15 @@ class Kitchen(threading.Thread):
         self.toolBox = toolBox
     
     def run(self):
+        while True:
+            self.mutex.acquire()
+            print("***** KITCHEN THREAD *****   ",self.stateInteractive)
+            self.loadData()
+            self.mutex.release()
+            self.setInteractiveModeState(const.STATE_INTERACTIVE_ACTIVE)
 
+    def loadData(self):
         print("kitchen --> start loading")
-
-        #file_in = open("test_all.txt","r")
 
         self.lifeLine.append("start")
         self.view.addLifeline("start")
@@ -49,12 +68,12 @@ class Kitchen(threading.Thread):
         input_dat = []
 
         if const.mode_interactive == self.mode:
-            input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors='ignore')
-            for idx, line in enumerate(input_stream):
-                if False == self.flag_capture_start:
+            for idx, line in enumerate(self.input_stream):
+                if const.STATE_INTERACTIVE_RESET == self.stateInteractive:
+                    self.setInteractiveModeState(const.STATE_INTERACTIVE_CAPTURING)
+                if const.STATE_INTERACTIVE_IDLE == self.stateInteractive:
                     continue
-                if True == self.flag_capture_stop:
-                    self.flag_capture_start = False
+                elif const.STATE_INTERACTIVE_PROCESSING == self.stateInteractive:
                     break
                 input_dat.append(line)
         elif const.mode_batch == self.mode:
@@ -107,6 +126,7 @@ class Kitchen(threading.Thread):
         cfg_methodname_index = 0
         cfg_ignore_str = None
         cfg_arg_seperator = None
+        cfg_filter_tag = None
 
         for line in cfg_file_in:
             if '[time]' in line:
@@ -127,11 +147,16 @@ class Kitchen(threading.Thread):
             elif '[argseperator]' in line:
                 str = line.split('[argseperator]')
                 cfg_arg_seperator = str[1].replace(' ','').replace('\n','')
+            elif '[filtertag]' in line:
+                str = line.split('[filtertag'])
+                cfg_filter_tag = str[1].replace(' ','').replace('\n','')
+
         cfg_file_in.close()
 
+        filter_str = "(.*)%s(.*)" % (cfg_filter_tag)
         index = 0        
         for idx, line in enumerate(input_dat):
-            if re.match("(.*)SHERLOCK/PROFILING(.*)",line):
+            if re.match(filter_str,line):
                 str_list = line[:]
                 for word in cfg_ignore_str:
                     str_list = str_list.replace(word,'')
@@ -208,10 +233,41 @@ class Kitchen(threading.Thread):
         pass
 
     def activateCapture(self,flag):
-        if False == self.flag_capture_start:
-            self.flag_capture_start = True
-        else:
-            self.flag_capture_stop = True
+        if const.STATE_INTERACTIVE_IDLE == self.stateInteractive or const.STATE_INTERACTIVE_RESET == self.stateInteractive:
+            self.setInteractiveModeState(const.STATE_INTERACTIVE_CAPTURING)
+        elif const.STATE_INTERACTIVE_CAPTURING == self.stateInteractive:
+            self.setInteractiveModeState(const.STATE_INTERACTIVE_PROCESSING)
+        elif const.STATE_INTERACTIVE_ACTIVE == self.stateInteractive:
+            self.setInteractiveModeState(const.STATE_INTERACTIVE_RESET)
+
+    def setInteractiveModeState(self,state):
+        if const.STATE_INTERACTIVE_RESET == state:
+            print("setInteractiveModeState : STATE_INTERACTIVE_RESET")
+            if const.STATE_INTERACTIVE_ACTIVE != self.stateInteractive:
+                pass # throw exception
+            self.view.reset()
+            self.reset()
+            self.stateInteractive = const.STATE_INTERACTIVE_RESET
+            self.mutex.release()
+
+        if const.STATE_INTERACTIVE_ACTIVE == state:
+            print("setInteractiveModeState : STATE_INTERACTIVE_ACTIVE")
+            if const.STATE_INTERACTIVE_PROCESSING != self.stateInteractive:
+                pass # throw exception
+            self.stateInteractive = const.STATE_INTERACTIVE_ACTIVE
+            self.mutex.acquire()
+
+        if const.STATE_INTERACTIVE_PROCESSING == state:
+            print("setInteractiveModeState : STATE_INTERACTIVE_PROCESSING")
+            if const.STATE_INTERACTIVE_CAPTURING != self.stateInteractive:
+                pass # throw exception
+            self.stateInteractive = const.STATE_INTERACTIVE_PROCESSING
+
+        if const.STATE_INTERACTIVE_CAPTURING == state:
+            print("setInteractiveModeState : STATE_INTERACTIVE_CAPTURING")
+            if const.STATE_INTERACTIVE_IDLE != self.stateInteractive or const.STATE_INTERACTIVE_RESET != self.stateInteractive:
+                pass # throw exception
+            self.stateInteractive = const.STATE_INTERACTIVE_CAPTURING
 
     def searchMessage(self,str):
         pass

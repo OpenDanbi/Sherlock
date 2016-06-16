@@ -20,17 +20,12 @@ class CaptainServer(object):
 
     def __init__(self,view):
         self.view = view
-        self.signal = []
-        self.lifeLine = []
         self.distance = 35
         self.eventoffset = 50
 
         self.classWidth = 200
-        self.maxIndex = 0
-        self.numberMessage = 0
 
         self.colour = []
-        self.highlightObject = None
         
         colour_list = [[0,0,255],
                       [255,0,0],
@@ -49,6 +44,14 @@ class CaptainServer(object):
             for colour_idx, colour_item in enumerate(colour_list):
                 self.colour.append(colour_item)
 
+        self.reset()
+
+    def reset(self):
+        self.signal = []
+        self.lifeLine = []
+        self.maxIndex = 0
+        self.numberMessage = 0
+        self.highlightObject = None
         self.hideString = []
         self.hideThread = []
         self.hideMessage = []
@@ -56,13 +59,13 @@ class CaptainServer(object):
         self.pos_y = 0
         self.viewWidth = 1000
         self.initialised = False
-
         self.srchIdx = []
         self.currIdx = 0
-        
         self.screenY = 0
         self.limitSearchBottomIndex = 0
         self.limitSearchTopIndex = 0
+        if self.headerView:
+            self.headerView.reset()
 
     def getLifeLines(self):
         return self.lifeLine
@@ -190,25 +193,16 @@ class CaptainServer(object):
 
     def selectMessage(self,msg):
         self.view.update()
-
-        #str_time_consumed = "\n\nTime consumed : %d msec\n" % (Utils.calcTimeConsumed(msg['time'],msg['endtime']))
-        #str_time_begin    = "begins at %s\n"%(msg['time'])
-        #str_time_end      = "ends at %s\n"%(msg['endtime'])
-        #str_arguments     = "arg:%s \n"%(msg['args'])
-        #str_ret           = "ret:%s \n"%(msg['ret'])
-        #print("*********** ",msg['args'])
+        
         hidden_call_flag, hidden_calls = self.getHiddenCalls(msg)
         
         hidden_call_str = "\n"
         for hc in hidden_calls:
             hidden_call_str += hc['class'] + "\n"
 
-        #msgInfoStr        = str_time_consumed + str_time_begin + str_time_end + str_arguments + str_ret + (hidden_call_str if hidden_call_flag else "")
-
         self.toolBox.setMessageInfoRet(msg['ret'])
         self.toolBox.setMessageInfoArg(msg['params'],msg['args'])
         self.toolBox.setMessageInfoTime(msg['time'],msg['endtime'],"%d"%(Utils.calcTimeConsumed(msg['time'],msg['endtime'])))
-        #self.toolBox.setMessageInfo(msgInfoStr)
         self.toolBox.setMsgInfoMessage(msg['message'])
         self.toolBox.setMsgInfoModule(msg['dest'])
 
@@ -448,12 +442,11 @@ class CaptainServer(object):
                     self.messages_to_be_plotted.insert(0,msg)
  
         message_idx_list = [l['messageindex'] for l in self.messages_to_be_plotted] 
-        self.limitSearchBottomIndex = max(message_idx_list)
-        self.limitSearchTopIndex = min(message_idx_list)
+        if message_idx_list:
+            self.limitSearchBottomIndex = max(message_idx_list)
+            self.limitSearchTopIndex = min(message_idx_list)
         self.screenY = self.pos_y
 
-        #print("top index : %d" % (self.limitSearchTopIndex))
-        #print("bottom index : %d" % (self.limitSearchBottomIndex))
         for msg in self.messages_to_be_plotted:
 
             if msg['tid'] in self.hideThread:

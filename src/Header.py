@@ -42,6 +42,10 @@ class Header(QLabel):
         """
         self.mainView = mainView
 
+    def reset(self):
+        self.headers = []
+        self.update() # Clear up all the heads
+
     def createHeaderMenus(self):
         for headInfo in self.headers:
             x = headInfo['x']

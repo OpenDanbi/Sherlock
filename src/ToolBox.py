@@ -6,6 +6,9 @@ import ClusterDialog
 class ToolBox(QVBoxLayout):
 
     sig = QtCore.Signal(object)
+    listThread = None
+    groupBoxThreadInfo = None
+    threadvbox = None
 
     def __init__(self,parentQWidget = None):
         QVBoxLayout.__init__(self)
@@ -173,16 +176,21 @@ class ToolBox(QVBoxLayout):
 
     def addThreadList(self,threads):
 
-        self.groupBoxThreadInfo = QGroupBox("Thread Info.")
-        self.groupBoxThreadInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
+        if not self.groupBoxThreadInfo:
+            self.groupBoxThreadInfo = QGroupBox("Thread Info.")
+            self.groupBoxThreadInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
 
-        vbox = QVBoxLayout()
-        self.listThread = QListWidget()
+        if not self.threadvbox:
+            self.threadvbox = QVBoxLayout()
+
+        if not self.listThread:
+            self.listThread = QListWidget()
+            
         self.listThread.setFixedWidth(200)
         self.listThread.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         QtCore.QObject.connect(self.listThread, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.toggleThreadDisplay)
-        vbox.addWidget(self.listThread)
-        self.groupBoxThreadInfo.setLayout(vbox)
+        self.threadvbox.addWidget(self.listThread)
+        self.groupBoxThreadInfo.setLayout(self.threadvbox)
         self.addWidget(self.groupBoxThreadInfo)
         self.groupBoxThreadInfo.setSizePolicy(self.sizePolicy)
 
