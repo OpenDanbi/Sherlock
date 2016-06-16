@@ -1,5 +1,5 @@
 from PySide import QtCore, QtGui
-from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabel, QListWidget, QGroupBox, QCheckBox, QLineEdit, QInputDialog
+from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabel, QListWidget, QGroupBox, QCheckBox, QLineEdit, QInputDialog, QTableWidget, QTableWidgetItem
 
 import ClusterDialog
 
@@ -56,6 +56,38 @@ class ToolBox(QVBoxLayout):
         self.groupBoxMessageInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
         vbox = QVBoxLayout()
         vbox.addWidget(self.msgInfo)
+        self.tableTime = QtGui.QTableWidget(3,2)
+        self.tableTime.setHorizontalLabels(['-','time'])
+        self.tableTime.setItem(0,0,QTableWidgetItem('begin'))
+        self.tableTime.setItem(0,1,QTableWidgetItem(' - '))
+        self.tableTime.setItem(1,0,QTableWidgetItem('end'))
+        self.tableTime.setItem(1,1,QTableWidgetItem(' - '))
+        self.tableTime.setItem(2,0,QTableWidgetItem('duration'))
+        self.tableTime.setItem(2,1,QTableWidgetItem(' - ')
+        vbox.addWidget(self.tableTime)
+
+        self.titleArg = QLabel('Argument List')
+        vbox.addWidget(self.titleArg)
+
+        max_arg_num = 10
+        self.tableArgs = QtGui.QTableWidget(max_arg_num,2)
+        self.tableArgs.setHorizontalLabels(['type','value'])
+        for idx in range(0,max_arg_num):
+            self.tableArgs.setItem(idx,0,QTableWidgetItem())
+            self.tableArgs.setItem(idx,1,QTableWidgetItem())
+        vbox.addWidget(self.tableArgs)
+
+        self.titleArg = QLabel('Return Value List')
+        vbox.addWidget(self.titleArg)
+
+        max_ret_num = 4
+        self.tableRet = QtGui.QTableWidget(max_ret_num,2)
+        self.tableRet.setHorizontalLabels(['type','value'])
+        for idx in range(0,max_ret_num):
+            self.tableRet.setItem(idx,0,QTableWidgetItem())
+            self.tableRet.setItem(idx,1,QTableWidgetItem())
+        vbox.addWidget(self.tableRet)
+
         self.buttonSrcView = QPushButton('view code')
         self.buttonSrcView.setFixedWidth(200)
         self.buttonSrcView.clicked.connect(self.openSourceViewer)
@@ -96,6 +128,31 @@ class ToolBox(QVBoxLayout):
 
     def openSourceViewer(self):
         self.srcViewer.openViewer(self.strModule,self.strMessage)
+
+    def setMessageInfoTime(self,begin,end,duration):
+        self.tableTime.item(0,1).setText(begin)
+        self.tableTime.item(1,1).setText(end)
+        self.tableTime.item(2,1).setText(duration + ' msec')
+
+    def setMessageInfoArg(self,listParam,listArg):
+        if listArg:
+            for idx, text in enumerate(listArg):
+                self.tableArgs.item(idx,1).setText(text)
+            for idx, text in enumerate(listParam):
+                self.tableArgs.item(idx,0).setText(text)
+        else:
+            for idx in range(0,self.tableArgs.rowCount()):
+                self.tableArgs.item(idx,1).setText('')
+                self.tableArgs.item(idx,0).setText('')
+
+    def setMessageInfoRet(self,listRet):
+        if listRet:
+            for idx, text in enumerate(listRet):
+                self.tableRet.item(idx,1).setText(text)
+        else:
+            for idx in range(0,self.tableRet.rowCount()):
+                self.tableRet.item(idx,1).setText('')
+                self.tableRet.item(idx,0).setText('')
 
     def setMessageInfo(self,info):
         self.msgInfo.setText(info)

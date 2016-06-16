@@ -191,20 +191,24 @@ class CaptainServer(object):
     def selectMessage(self,msg):
         self.view.update()
 
-        str_time_consumed = "\n\nTime consumed : %d msec\n" % (Utils.calcTimeConsumed(msg['time'],msg['endtime']))
-        str_time_begin    = "begins at %s\n"%(msg['time'])
-        str_time_end      = "ends at %s\n"%(msg['endtime'])
-        str_arguments     = "arg:%s \n"%(msg['args'])
-        str_ret           = "ret:%s \n"%(msg['ret'])
+        #str_time_consumed = "\n\nTime consumed : %d msec\n" % (Utils.calcTimeConsumed(msg['time'],msg['endtime']))
+        #str_time_begin    = "begins at %s\n"%(msg['time'])
+        #str_time_end      = "ends at %s\n"%(msg['endtime'])
+        #str_arguments     = "arg:%s \n"%(msg['args'])
+        #str_ret           = "ret:%s \n"%(msg['ret'])
+        #print("*********** ",msg['args'])
         hidden_call_flag, hidden_calls = self.getHiddenCalls(msg)
         
         hidden_call_str = "\n"
         for hc in hidden_calls:
             hidden_call_str += hc['class'] + "\n"
 
-        msgInfoStr        = str_time_consumed + str_time_begin + str_time_end + str_arguments + str_ret + (hidden_call_str if hidden_call_flag else "")
+        #msgInfoStr        = str_time_consumed + str_time_begin + str_time_end + str_arguments + str_ret + (hidden_call_str if hidden_call_flag else "")
 
-        self.toolBox.setMessageInfo(msgInfoStr)
+        self.toolBox.setMessageInfoRet(msg['ret'])
+        self.toolBox.setMessageInfoArg(msg['params'],msg['args'])
+        self.toolBox.setMessageInfoTime(msg['time'],msg['endtime'],"%d"%(Utils.calcTimeConsumed(msg['time'],msg['endtime'])))
+        #self.toolBox.setMessageInfo(msgInfoStr)
         self.toolBox.setMsgInfoMessage(msg['message'])
         self.toolBox.setMsgInfoModule(msg['dest'])
 
@@ -477,7 +481,7 @@ class CaptainServer(object):
                 msg['lifeline'].drawBody(self.eventoffset+Utils.calcCoordinate(self.index_mapper[msg['index']]['mapper']),self.eventoffset+Utils.calcCoordinate(self.index_mapper[msg['bodyendidx']]['mapper']),msg['bodydepth'],event_colour)
 
     def sendSignal(self,departure,destination,pSignal,tid,time,index,stack,args):
-        self.signal.append({'messageindex':self.numberMessage, 'departure':departure,'dest':destination,'message':pSignal,'tid':tid,'time':time,'index':index,'stack':stack.list()[:],'depth':stack.depth('compareClass'), 'lifeline':None, 'endtime':None, 'bodyendidx':None, 'bodydepth':None, 'args':args, 'ret':None})
+        self.signal.append({'messageindex':self.numberMessage, 'departure':departure,'dest':destination,'message':pSignal,'tid':tid,'time':time,'index':index,'stack':stack.list()[:],'depth':stack.depth('compareClass'), 'lifeline':None, 'endtime':None, 'bodyendidx':None, 'bodydepth':None, 'args':args, 'ret':None, 'params':params})
         self.numberMessage += 1 
 
         if self.maxIndex < index:

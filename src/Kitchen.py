@@ -106,6 +106,7 @@ class Kitchen(threading.Thread):
         cfg_flowtype_index = 0
         cfg_methodname_index = 0
         cfg_ignore_str = None
+        cfg_arg_seperator = None
 
         for line in cfg_file_in:
             if '[time]' in line:
@@ -123,9 +124,10 @@ class Kitchen(threading.Thread):
             elif '[ignore]' in line:
                 str = line.split('[ignore]')
                 cfg_ignore_str = str[1].split(',')
+            elif '[argseperator]' in line:
+                str = line.split('[argseperator]')
+                cfg_arg_seperator = str[1].replace(' ','').replace('\n','')
         cfg_file_in.close()
-
-        print("%d,%d,%d,%d" % (cfg_time_index,cfg_thread_index,cfg_flowtype_index,cfg_methodname_index))
 
         index = 0        
         for idx, line in enumerate(input_dat):
@@ -139,6 +141,10 @@ class Kitchen(threading.Thread):
                 if len(str_list) < 9:
                     print("input line has some errors : %s"%line)
                     continue
+                
+                if '[entry]' not in line and '[exit]' not in line:
+                    print("input line has some errors : %s" % line)
+                    continue
 
                 event_time = str_list[cfg_time_index]
                 thread_id = str_list[cfg_thread_index]
@@ -149,11 +155,16 @@ class Kitchen(threading.Thread):
                 for _i in range(method_name_index,len(str_list)):
                     package_method_name += str_list[_i]
 
-                arguments_str = package_method_name.split("[args]")[1] if "[args]" in package_method_name else None
-                return_str = package_method_name.split("[returns]")[1] if "[returns]" in package_method_name else None
+                org_line = line[:]
+                arguments_str = org_line.split("[args]")[1] if "[args]" in org_line else None
+                return_str = org_line.split("[returns]")[1] if "[returns]" in org_line else None
                 arg_removed = package_method_name.split("[args]")[0]
                 ret_removed = arg_removed.split("[returns]")[0]
                 parameter_removed = package_method_name.split("(")[0]
+                inside_parenthesis = package_method_name.split("(")[1].split(")")[0].replace(' ','')
+                parameters = None
+                if '' != inside_parenthesis:
+                    parameters = inside_parenthesis.split(',')
                 method_name = list(reversed(parameter_removed .split(".")))[0]
                 package_name = ".".join(list(reversed(list(reversed(parameter_removed .split(".")))[1:])))
 
@@ -172,11 +183,11 @@ class Kitchen(threading.Thread):
                 thread_index = self.threads.index(thread_id)
 
                 if flow_type == "[entry]":
-                    self.view.sendSignal(self.callStack[thread_index].peek(),class_name,method_name,thread_index,event_time,index+1,self.callStack[thread_index],arguments_str.split() if arguments_str else None)
+                    self.view.sendSignal(self.callStack[thread_index].peek(),class_name,method_name,thread_index,event_time,index+1,self.callStack[thread_index],arguments_str.split(cfg_arg_seperator) if arguments_str else None,parameters)
                     self.callStack[thread_index].push({'class':class_name, 'message':method_name})
 
                 if flow_type == "[exit]":
-                    self.view.completeTask(class_name,method_name,1,event_time,index+1,self.callStack[thread_index].depth('compareClass'),return_str)
+                    self.view.completeTask(class_name,method_name,1,event_time,index+1,self.callStack[thread_index].depth('compareClass'),return_str.split(cfg_arg_seperator) if return_str else None)
                     self.callStack[thread_index].pop()
 
                 index += 1
