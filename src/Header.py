@@ -60,14 +60,15 @@ class Header(QLabel):
                 menu.exec_(QtGui.QCursor.pos())
 
     def showClusterDialog(self):
-        response, cluster_name = ClusterDialog.ClusterDialog.getClusterName([])
-        
-        print("cluster name is %s" % cluster_name)
-        if self.mainView.createCluster(cluster_name):
-            pass
-        else:
-            pass
+        response, cluster_name = ClusterDialog.ClusterDialog.getClusterName(self.mainView.getLifeLines(),self.selectedHeader['name'])
 
+        if response:
+            print("cluster name is %s" % cluster_name)
+            if self.mainView.createCluster(cluster_name):
+                pass
+            else:
+                pass
+        
     def hideLifeLine(self):
         print("Remove %s" % self.selectedHeader['name']) 
         self.mainView.hideLifeline(self.selectedHeader['name'])

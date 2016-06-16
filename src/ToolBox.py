@@ -26,7 +26,6 @@ class ToolBox(QVBoxLayout):
         self.searchCursor = QLabel()
         self.searchHLayout.addWidget(self.searchCursor)
         vboxSearch.addLayout(self.searchHLayout)
-        #self.addLayout(self.searchHLayout)
         self.browseHLayout = QHBoxLayout()
         self.buttonLookUp = QPushButton('\u21e7')  #Arrow up
         self.buttonLookUp.clicked.connect(self.moveToPrev)
@@ -34,7 +33,6 @@ class ToolBox(QVBoxLayout):
         self.buttonLookDown.clicked.connect(self.moveToNext)
         self.browseHLayout.addWidget(self.buttonLookUp)
         self.browseHLayout.addWidget(self.buttonLookDown)
-        #self.addLayout(self.browseHLayout)
         vboxSearch.addLayout(self.browseHLayout)
         self.groupBoxSearch.setLayout(vboxSearch)
         self.addWidget(self.groupBoxSearch)
@@ -65,23 +63,11 @@ class ToolBox(QVBoxLayout):
         self.checkHideCircular.setCheckState(QtCore.Qt.Unchecked)
         self.checkHideCircular.stateChanged.connect(self.changeHideCircularMessage)
         self.addWidget(self.checkHideCircular)
-        self.buttonGroupName = QPushButton('Group')
-        self.buttonGroupName.clicked.connect(self.addGroupName)
-        self.addWidget(self.buttonGroupName)
 
         self.addWidget(self.groupBoxMessageInfo)
 
     def setMsgInfoMessage(self,msg):
         self.strMessage = msg
-
-    def addGroupName(self):
-        response, cluster_name = ClusterDialog.ClusterDialog.getClusterName(self.diagramView.getLifeLines())
-        
-        print("cluster name is %s" % cluster_name)
-        if self.diagramView.createCluster(cluster_name):
-            item = QtGui.QListWidgetItem(cluster_name)
-        else:
-            pass
 
     def changeHideCircularMessage(self,state):
         if state == QtCore.Qt.Unchecked:

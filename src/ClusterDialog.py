@@ -6,7 +6,7 @@ import Lifeline
 class ClusterDialog(QDialog):
     
     editClusterName = None
-    def __init__(self, lifeline, parent = None):
+    def __init__(self, lifeline, defaultName, parent = None):
         super(ClusterDialog, self).__init__(parent)
 
         self.lifeline = lifeline
@@ -15,7 +15,7 @@ class ClusterDialog(QDialog):
         message = QLabel('Enter group name')
         layout.addWidget(message)
 
-        self.editClusterName = QLineEdit()
+        self.editClusterName = QLineEdit(defaultName)
         self.editClusterName.setFixedHeight(30)
         self.editClusterName.setFixedWidth(400)
         self.editClusterName.textChanged.connect(self.validateCluster)
@@ -28,6 +28,8 @@ class ClusterDialog(QDialog):
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
+
+        self.validateCluster()
 
     def validateCluster(self):
         cnt = 0
@@ -50,8 +52,8 @@ class ClusterDialog(QDialog):
         return self.editClusterName.text()
     
     @staticmethod
-    def getClusterName(lifelines, parent = None):
-        dialog = ClusterDialog(lifelines,parent)
+    def getClusterName(lifelines, defaultName, parent = None):
+        dialog = ClusterDialog(lifelines,defaultName,parent)
         result = dialog.exec_()
         return (result, dialog.getClusterText())
 
