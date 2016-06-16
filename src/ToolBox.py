@@ -61,13 +61,13 @@ class ToolBox(QVBoxLayout):
         vbox = QVBoxLayout()
         vbox.addWidget(self.msgInfo)
         self.tableTime = QtGui.QTableWidget(3,2)
-        self.tableTime.setHorizontalLabels(['-','time'])
+        self.tableTime.setHorizontalHeaderLabels(['-','time'])
         self.tableTime.setItem(0,0,QTableWidgetItem('begin'))
         self.tableTime.setItem(0,1,QTableWidgetItem(' - '))
         self.tableTime.setItem(1,0,QTableWidgetItem('end'))
         self.tableTime.setItem(1,1,QTableWidgetItem(' - '))
         self.tableTime.setItem(2,0,QTableWidgetItem('duration'))
-        self.tableTime.setItem(2,1,QTableWidgetItem(' - ')
+        self.tableTime.setItem(2,1,QTableWidgetItem(' - '))
         vbox.addWidget(self.tableTime)
 
         self.titleArg = QLabel('Argument List')
@@ -75,7 +75,7 @@ class ToolBox(QVBoxLayout):
 
         max_arg_num = 10
         self.tableArgs = QtGui.QTableWidget(max_arg_num,2)
-        self.tableArgs.setHorizontalLabels(['type','value'])
+        self.tableArgs.setHorizontalHeaderLabels(['type','value'])
         for idx in range(0,max_arg_num):
             self.tableArgs.setItem(idx,0,QTableWidgetItem())
             self.tableArgs.setItem(idx,1,QTableWidgetItem())
@@ -86,7 +86,7 @@ class ToolBox(QVBoxLayout):
 
         max_ret_num = 4
         self.tableRet = QtGui.QTableWidget(max_ret_num,2)
-        self.tableRet.setHorizontalLabels(['type','value'])
+        self.tableRet.setHorizontalHeaderLabels(['type','value'])
         for idx in range(0,max_ret_num):
             self.tableRet.setItem(idx,0,QTableWidgetItem())
             self.tableRet.setItem(idx,1,QTableWidgetItem())

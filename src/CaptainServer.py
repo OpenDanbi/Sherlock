@@ -475,7 +475,7 @@ class CaptainServer(object):
             else:
                 msg['lifeline'].drawBody(self.eventoffset+Utils.calcCoordinate(self.index_mapper[msg['index']]['mapper']),self.eventoffset+Utils.calcCoordinate(self.index_mapper[msg['bodyendidx']]['mapper']),msg['bodydepth'],event_colour)
 
-    def sendSignal(self,departure,destination,pSignal,tid,time,index,stack,args):
+    def sendSignal(self,departure,destination,pSignal,tid,time,index,stack,args,params):
         self.signal.append({'messageindex':self.numberMessage, 'departure':departure,'dest':destination,'message':pSignal,'tid':tid,'time':time,'index':index,'stack':stack.list()[:],'depth':stack.depth('compareClass'), 'lifeline':None, 'endtime':None, 'bodyendidx':None, 'bodydepth':None, 'args':args, 'ret':None, 'params':params})
         self.numberMessage += 1 
 

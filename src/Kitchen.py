@@ -36,10 +36,10 @@ class Kitchen(threading.Thread):
         const.STATE_INTERACTIVE_RESET = 4
         self.stateInteractive = const.STATE_INTERACTIVE_IDLE
 
-        if const.mode_interactive = self.mode:
+        if const.mode_interactive == self.mode:
             self.input_stream = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8', errors='ignore')
 
-    def reset(self)
+    def reset(self):
         self.lifeLine = []
         self.callStack = [] #Stack.Stack()
         self.threads = []
@@ -148,7 +148,7 @@ class Kitchen(threading.Thread):
                 str = line.split('[argseperator]')
                 cfg_arg_seperator = str[1].replace(' ','').replace('\n','')
             elif '[filtertag]' in line:
-                str = line.split('[filtertag'])
+                str = line.split('[filtertag]')
                 cfg_filter_tag = str[1].replace(' ','').replace('\n','')
 
         cfg_file_in.close()
