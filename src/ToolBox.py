@@ -114,7 +114,7 @@ class ToolBox(QVBoxLayout):
 
     def reset(self):
         for idx in reversed(range(0,self.listThread.count())):
-            self.listThread.takeItem(idx):
+            self.listThread.takeItem(idx)
 
     def setMsgInfoMessage(self,msg):
         self.strMessage = msg

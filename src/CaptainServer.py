@@ -17,6 +17,8 @@ class CaptainServer(object):
     flagHideCircularLine = False
     messages_to_be_plotted = []
     numberMessage = 0
+    currPosX = 0
+    currPoxY = 0
 
     def __init__(self,view):
         self.view = view
@@ -45,6 +47,22 @@ class CaptainServer(object):
                 self.colour.append(colour_item)
 
         self.reset()
+
+    def connectSourceViewer(self,viewer):
+        self.srcViewer = viewer
+
+    def createMenus(self):
+        msg = self.getMessageLine(self.currPosX,self.currPosY)
+        self.highlightObject = msg
+        self.selectMessage(self.highlightObject)
+        #self.srcViewer.openViewer(self.highlightObject['dest'],self.highlightObject['message'])
+        
+        menu = QtGui.QMenu()
+        menu.addAction('Hide')
+        menu.addAction('Hide all')
+        menu.addAction('View Code')
+        menu.addAction('Close body')
+        menu.exec_(QtGui.QCursor.pos())
 
     def reset(self):
         self.signal = []
@@ -181,6 +199,9 @@ class CaptainServer(object):
         self.headerView.updateViewSize(self.viewWidth,self.viewHeight)
 
     def handleMouseMove(self,x,y):
+        self.currPosX = x
+        self.currPosY = y
+
         msg = self.getMessageLine(x,y)
         if msg:
             tooltip_str = "<< message info >> \nfrom: " + msg['departure']['class'] + "\n to   : " + msg['dest']
