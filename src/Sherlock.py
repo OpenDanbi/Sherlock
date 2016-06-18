@@ -23,6 +23,9 @@ class MainView(QLabel):
         self.anchor = None
         self.drawer = CaptainServer.CaptainServer(self)
         self.drawer.initUI()
+        
+        self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.drawer.createMenus) 
         #self.views = []
 
     def moveTo(self,x,y):
@@ -177,9 +180,10 @@ class MainWindow(QWidget):
         toolBox.connectMsgRcv(scrollView.mainView.drawer)
         toolBox.connectMsgRcv(controller)
         toolBox.connectDiagramView(scrollView.mainView.drawer)
-        toolBox.connectSourceViewer(srcViewer)
+        #toolBox.connectSourceViewer(srcViewer)
 
         scrollView.mainView.drawer.setToolBox(toolBox)
+        scrollView.mainView.drawer.connectSourceViewer(srcViewer)
 
         self.setLayout(hbox)
 
