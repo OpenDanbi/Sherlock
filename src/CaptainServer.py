@@ -73,6 +73,12 @@ class CaptainServer(object):
         return self.lifeLine
 
     def setHideCircularLine(self,flag):
+        """
+        If circular-hide flag is set, all the self-call message will be erased and the diagram will be re-organised.
+
+        @param flag True when self-call message is erased. False self-call message is displayed.
+        @return nothing
+        """
         self.flagHideCircularLine = flag
 
     def initUI(self):
@@ -84,7 +90,14 @@ class CaptainServer(object):
         self.toolBox = toolBox
 
     def createCluster(self,name):
+        """
+        Initially, Sherlock displays all the messages and allow users simplify it.
+        When a user wants to merge multiple life-lines into one module or one package, createCluster method will create a new life-line.
+        Its name is a package or module name which contains multiple life-line represents classes.
+        Life-lines for the classes will be hidden and messages connected to the class life-lines are re-organised and connected to newly created module life-line.
 
+        @param name package name or module name 
+        """
         flag = False
         for l in self.lifeLine:
             if name in l.getClassName():
