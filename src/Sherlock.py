@@ -72,12 +72,6 @@ class MainView(QLabel):
         self.setFixedSize(width,height)
         self.drawer.paintEvent(eventQPaintEvent)
 
-        #for view in self.views:
-        #    view.paintEvent(eventQPaintEvent)
-
-    #def connectView(self, view):
-    #    self.views.append(view)
-
     def connectHeaderView(self, view):
         self.drawer.connectHeaderView(view)
 
@@ -129,6 +123,8 @@ class ScrollArea (QScrollArea):
 
 class MainWindow(QWidget):
     def __init__(self, argv, parentQWidget = None):
+        QWidget.__init__(self)
+
         const.mode_interactive = 1
         const.mode_file = 2
         const.mode_batch = 3
@@ -153,7 +149,6 @@ class MainWindow(QWidget):
             idx = argv.index('-c')
             cfg_file = argv[idx+1]
 
-        QWidget.__init__(self)
         hbox = QHBoxLayout()
         vbox = QVBoxLayout()
         scrollView = ScrollArea()
@@ -168,24 +163,26 @@ class MainWindow(QWidget):
         hbox.addLayout(vbox)
         hbox.addLayout(toolBox)
 
-        controller = Kitchen.Kitchen(mode,arg_file,cfg_file)
-        controller.connectView(scrollView.mainView.drawer)
-        controller.connectToolBox(toolBox)
-        controller.start()
+        self.controller = Kitchen.Kitchen(mode,arg_file,cfg_file)
+        self.controller.connectView(scrollView.mainView.drawer)
+        self.controller.connectToolBox(toolBox)
+        self.controller.start()
 
         srcViewer = SourceViewer.SourceViewer()
         srcViewer.createIndex(src_path)
 
         toolBox.connectMsgRcv(headerView)
         toolBox.connectMsgRcv(scrollView.mainView.drawer)
-        toolBox.connectMsgRcv(controller)
+        toolBox.connectMsgRcv(self.controller)
         toolBox.connectDiagramView(scrollView.mainView.drawer)
-        #toolBox.connectSourceViewer(srcViewer)
 
         scrollView.mainView.drawer.setToolBox(toolBox)
         scrollView.mainView.drawer.connectSourceViewer(srcViewer)
 
         self.setLayout(hbox)
+
+    def closeEvent(self,event):
+        self.controller.terminate()
 
 app = QApplication(sys.argv)
 mainWindow = MainWindow(sys.argv)

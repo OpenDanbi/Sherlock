@@ -18,6 +18,7 @@ import io
 class Kitchen(threading.Thread):
 
     input_stream = None
+    flagTerminate = False
    
     def __init__(self,mode,fileArg,cfgArg):
         threading.Thread.__init__(self)
@@ -50,10 +51,16 @@ class Kitchen(threading.Thread):
         
     def connectToolBox(self,toolBox):
         self.toolBox = toolBox
+
+    def terminate(self):
+        self.flagTerminate = True
+        self.mutex.release()
     
     def run(self):
         while True:
             self.mutex.acquire()
+            if self.flagTerminate:
+                break
             print("***** KITCHEN THREAD *****   ",self.stateInteractive)
             self.loadData()
             self.mutex.release()
