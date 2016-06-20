@@ -42,6 +42,7 @@ class MessageMenu(QtCore.QObject):
 
     def closeBody(self):
         print("*** closeBody")
+        self.diagramView.closeCurrentHighLightedBody()
 
     def createHeaderMenus(self):
         pass

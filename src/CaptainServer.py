@@ -164,10 +164,27 @@ class CaptainServer(object):
                 if cname['name'] in l.getClassName():
                     l.setClusterLifeline(cname['lifeline'])
 
+    def closeCurrentHighLightedBody(self):
+        if self.highlightObject:
+            self.hideChildMessages()
+            self.refreshData()
+            self.view.update() 
+        
+    def hideChildMessages(self):
+        index = self.signal.index(self.highlightObject)
+        for idx in range(index+1, len(self.signal)):
+            if self.signal[idx]['tid'] == self.highlightObject['tid']:
+                if len(self.signal[idx]['stack']) > len(self.highlightObject['stack']):
+                    self.hideMessage.append(self.signal[idx])
+                else:
+                    break
+
     def hideCurrentHighLighted(self):
         if self.highlightObject not in self.hideMessage:
             self.hideMessage.append(self.highlightObject)
 
+            self.hideChildMessages()
+            """
             index = self.signal.index(self.highlightObject)
             for idx in range(index+1, len(self.signal)):
                 if self.signal[idx]['tid'] == self.highlightObject['tid']:
@@ -175,7 +192,7 @@ class CaptainServer(object):
                         self.hideMessage.append(self.signal[idx])
                     else:
                         break
-
+            """
         self.refreshData()
         self.view.update()
 
@@ -250,6 +267,8 @@ class CaptainServer(object):
         print(self.getHiddenCalls(msg))
 
     def handleRelease(self,x,y):
+        self.currPosX = x
+        self.currPosY = y
         msg = self.getMessageLine(x,y)
         self.highlightObject = msg
         self.selectMessage(self.highlightObject)
