@@ -7,6 +7,7 @@ import re
 import copy
 import traceback
 import Utils
+import MessageMenu
 
 class CaptainServer(object):
     
@@ -19,13 +20,14 @@ class CaptainServer(object):
     numberMessage = 0
     currPosX = 0
     currPoxY = 0
+    messageMenu = None
 
     def __init__(self,view):
         self.view = view
         self.distance = 35
         self.eventoffset = 50
-
         self.classWidth = 200
+        self.messageMenu = MessageMenu.MessageMenu(self)
 
         self.colour = []
         
@@ -51,6 +53,9 @@ class CaptainServer(object):
     def connectSourceViewer(self,viewer):
         self.srcViewer = viewer
 
+    def openCodeViewer(self):
+        self.srcViewer.openViewer(self.highlightObject['dest'],self.highlightObject['message'])
+
     def createMenus(self):
         msg = self.getMessageLine(self.currPosX,self.currPosY)
         self.highlightObject = msg
@@ -58,10 +63,10 @@ class CaptainServer(object):
         #self.srcViewer.openViewer(self.highlightObject['dest'],self.highlightObject['message'])
         
         menu = QtGui.QMenu()
-        menu.addAction('Hide')
-        menu.addAction('Hide all')
-        menu.addAction('View Code')
-        menu.addAction('Close body')
+        menu.addAction(self.messageMenu.actHide)
+        menu.addAction(self.messageMenu.actHideAll)
+        menu.addAction(self.messageMenu.actViewCode)
+        menu.addAction(self.messageMenu.actCloseBody)
         menu.exec_(QtGui.QCursor.pos())
 
     def reset(self):
