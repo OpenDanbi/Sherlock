@@ -3,6 +3,7 @@ from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabe
 
 import ClusterDialog
 import const
+import HiddenDialog
 
 class ToolBox(QVBoxLayout):
 
@@ -237,8 +238,12 @@ class ToolBox(QVBoxLayout):
             rcv.activateHide(True)
 
     def notifyShowAll(self):
-        for rcv in self.msgRcv:
-            rcv.resetAllLifelines()
+        #for rcv in self.msgRcv:
+        #    rcv.resetAllLifelines()
+        response, selected_items = HiddenDialog.HiddenDialog.getSelectedItems(self.diagramView.getHiddenLifeLines())
+
+        if response:
+            print(selected_items)
 
     def notifyCapture(self):
         for rcv in self.msgRcv:

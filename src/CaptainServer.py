@@ -350,6 +350,9 @@ class CaptainServer(object):
     
     def hideLifeline(self,classname):
         self.hideString.append(classname)
+
+    def getHiddenLifeLines(self):
+        return self.hideString
         
     def connectController(self,controller):
         self.controller = controller
@@ -590,6 +593,10 @@ class CaptainServer(object):
         del self.hideString[:]
         self.refreshData()
         self.view.update()
+
+    def showLifelines(self, listLifelines):
+        pass
+        
 
     def activateCapture(self,flag):
         pass
