@@ -11,11 +11,13 @@ class ToolBox(QVBoxLayout):
     listThread = None
     groupBoxThreadInfo = None
     threadvbox = None
+    mode = None
 
-    def __init__(self,parentQWidget = None):
+    def __init__(self, mode, parentQWidget = None):
         QVBoxLayout.__init__(self)
 
         self.sig.connect(self.addThreadList)
+        self.mode = mode
 
         self.sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
 
@@ -51,10 +53,11 @@ class ToolBox(QVBoxLayout):
         self.buttonShowAll.setFixedWidth(200)
         self.buttonShowAll.clicked.connect(self.showHiddenLifelines)
         self.addWidget(self.buttonShowAll)
-        self.buttonCapture = QPushButton('Capture')
-        self.buttonCapture.setFixedWidth(200)
-        self.buttonCapture.clicked.connect(self.notifyCapture)
-        self.addWidget(self.buttonCapture)
+        if const.mode_interactive == mode:
+            self.buttonCapture = QPushButton('Capture')
+            self.buttonCapture.setFixedWidth(200)
+            self.buttonCapture.clicked.connect(self.notifyCapture)
+            self.addWidget(self.buttonCapture)
         self.msgRcv = []
         self.msgInfo = QLabel()
         self.groupBoxMessageInfo = QGroupBox("Message Info.")
@@ -164,6 +167,9 @@ class ToolBox(QVBoxLayout):
                 self.tableRet.item(idx,0).setText('')
 
     def notifyInteractiveStateChanged(self,state):
+        if const.mode_interactive != self.mode:
+            return
+
         if const.STATE_INTERACTIVE_CAPTURING == state:
             self.buttonCapture.setEnabled(True)
             self.buttonCapture.setText('Stop Capture')

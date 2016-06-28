@@ -158,7 +158,7 @@ class MainWindow(QWidget):
         vbox.addWidget(headerView)
         vbox.addWidget(scrollView)
 
-        toolBox = ToolBox.ToolBox()
+        toolBox = ToolBox.ToolBox(mode)
 
         hbox.addLayout(vbox)
         hbox.addLayout(toolBox)
