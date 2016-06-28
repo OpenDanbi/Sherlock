@@ -4,6 +4,7 @@ from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabe
 import ClusterDialog
 import const
 import HiddenDialog
+import HiddenMessageDialog
 
 class ToolBox(QVBoxLayout):
 
@@ -49,10 +50,16 @@ class ToolBox(QVBoxLayout):
         self.addWidget(self.groupBoxSearch)
         self.groupBoxSearch.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed))
 
-        self.buttonShowAll = QPushButton('Show hidden life-lines')
-        self.buttonShowAll.setFixedWidth(200)
-        self.buttonShowAll.clicked.connect(self.showHiddenLifelines)
-        self.addWidget(self.buttonShowAll)
+        self.buttonHiddenLifelines = QPushButton('Show hidden life-lines')
+        self.buttonHiddenLifelines.setFixedWidth(200)
+        self.buttonHiddenLifelines.clicked.connect(self.showHiddenLifelines)
+        self.addWidget(self.buttonHiddenLifelines)
+
+        self.buttonHiddenMessages = QPushButton('Show hidden Messages')
+        self.buttonHiddenMessages.setFixedWidth(200)
+        self.buttonHiddenMessages.clicked.connect(self.showHiddenMessages)
+        self.addWidget(self.buttonHiddenMessages)
+
         if const.mode_interactive == mode:
             self.buttonCapture = QPushButton('Capture')
             self.buttonCapture.setFixedWidth(200)
@@ -245,6 +252,11 @@ class ToolBox(QVBoxLayout):
 
     def showHiddenLifelines(self):
         response, selected_items = HiddenDialog.HiddenDialog.getSelectedItems(self.diagramView.getHiddenLifeLines())
+        if response:
+            self.diagramView.showLifelines(selected_items)
+
+    def showHiddenMessages(self):
+        response, selected_items = HiddenMessageDialog.HiddenMessageDialog.getSelectedItems(self.diagramView.getHiddenCalls())
         if response:
             self.diagramView.showLifelines(selected_items)
 
