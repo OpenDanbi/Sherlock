@@ -595,8 +595,10 @@ class CaptainServer(object):
         self.view.update()
 
     def showLifelines(self, listLifelines):
-        pass
-        
+        for item in listLifelines:
+            self.hideString.remove(item)
+        self.refreshData()
+        self.view.update()
 
     def activateCapture(self,flag):
         pass

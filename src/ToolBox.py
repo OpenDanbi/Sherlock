@@ -47,9 +47,9 @@ class ToolBox(QVBoxLayout):
         self.addWidget(self.groupBoxSearch)
         self.groupBoxSearch.setSizePolicy(QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed))
 
-        self.buttonShowAll = QPushButton('Show All')
+        self.buttonShowAll = QPushButton('Show hidden life-lines')
         self.buttonShowAll.setFixedWidth(200)
-        self.buttonShowAll.clicked.connect(self.notifyShowAll)
+        self.buttonShowAll.clicked.connect(self.showHiddenLifelines)
         self.addWidget(self.buttonShowAll)
         self.buttonCapture = QPushButton('Capture')
         self.buttonCapture.setFixedWidth(200)
@@ -237,13 +237,10 @@ class ToolBox(QVBoxLayout):
         for rcv in self.msgRcv:
             rcv.activateHide(True)
 
-    def notifyShowAll(self):
-        #for rcv in self.msgRcv:
-        #    rcv.resetAllLifelines()
+    def showHiddenLifelines(self):
         response, selected_items = HiddenDialog.HiddenDialog.getSelectedItems(self.diagramView.getHiddenLifeLines())
-
         if response:
-            print(selected_items)
+            self.diagramView.showLifelines(selected_items)
 
     def notifyCapture(self):
         for rcv in self.msgRcv:
