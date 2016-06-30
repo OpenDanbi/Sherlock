@@ -1,0 +1,15 @@
+This is a simple example project for generating logs automatically. To run this project follow the steps described below.
+
+1. Build a jar file using gradle
+$ cd JarProject
+$ gradle build
+
+2. Build main application using gradle
+$ cd ../DriverProject
+$ gradle build
+
+3. Run the application and save log as a file.
+$ gradle run > log.txt
+
+4. Use Shelock to generate behavioural diagram with the log file.
+
