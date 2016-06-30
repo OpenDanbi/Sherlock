@@ -182,17 +182,8 @@ class CaptainServer(object):
     def hideCurrentHighLighted(self):
         if self.highlightObject not in self.hideMessage:
             self.hideMessage.append(self.highlightObject)
-
             self.hideChildMessages()
-            """
-            index = self.signal.index(self.highlightObject)
-            for idx in range(index+1, len(self.signal)):
-                if self.signal[idx]['tid'] == self.highlightObject['tid']:
-                    if len(self.signal[idx]['stack']) > len(self.highlightObject['stack']):
-                        self.hideMessage.append(self.signal[idx])
-                    else:
-                        break
-            """
+
         self.refreshData()
         self.view.update()
 
@@ -595,8 +586,10 @@ class CaptainServer(object):
         self.view.update()
 
     def showLifelines(self, listLifelines):
-        pass
-        
+        for item in listLifelines:
+            self.hideString.remove(item)
+        self.refreshData()
+        self.view.update()
 
     def activateCapture(self,flag):
         pass
