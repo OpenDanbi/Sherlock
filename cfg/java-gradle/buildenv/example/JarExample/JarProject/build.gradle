@@ -28,6 +28,6 @@ jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
 
     manifest {
-        attribute 'Main-Class': 'com.danbi.example.aspectj.library','Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+        attributes 'Main-Class': 'com.danbi.example.aspectj.library','Class-Path': configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
     }
 }
