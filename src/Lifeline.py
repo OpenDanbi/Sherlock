@@ -48,6 +48,9 @@ class Lifeline(object):
             self.message.append(msg)
 
     def getMessageList(self):
+        """
+        Pass back message list called in this life-lines
+        """
         return self.message
 
     def setLifelineLength(self,length):
