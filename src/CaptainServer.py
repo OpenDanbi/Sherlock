@@ -21,6 +21,7 @@ class CaptainServer(object):
     currPosX = 0
     currPoxY = 0
     messageMenu = None
+    PREVENT_DRAWING_SKIP_PROCESS = 10
 
     def __init__(self,view):
         """
@@ -267,6 +268,7 @@ class CaptainServer(object):
         This signals drawing available. Until this method is called, diagram will not be displayed.
         """
         self.initialised = True
+        self.pos_y = self.PREVENT_DRAWING_SKIP_PROCESS  # If Y coordinate of screen is the same as scroll coordinate, drawing process doesn't do anything - message line will not be displayed.
 
         for msg in self.signal:
             if None == msg['bodyendidx']:
