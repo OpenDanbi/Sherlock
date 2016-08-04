@@ -618,7 +618,7 @@ class CaptainServer(object):
             self.limitSearchTopIndex = min(message_idx_list)
         self.screenY = self.pos_y
 
-        for msg in self.messages_to_be_plotted:
+        for msg in sorted(self.messages_to_be_plotted, key=lambda k: k['bodydepth']):
 
             if msg['tid'] in self.hideThread:
                 continue
