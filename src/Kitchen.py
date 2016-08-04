@@ -169,8 +169,7 @@ class Kitchen(threading.Thread):
                     str_list = str_list.replace(word,'')
                 str_list = str_list.split()
 
-                #str_list = line.replace('static','').replace('synchronized','').replace('public','').replace('private','').replace('protected','').split()
-                if len(str_list) < 9:
+                if len(str_list) < max(cfg_time_index,cfg_thread_index,cfg_flowtype_index,cfg_methodname_index):
                     print("input line has some errors : %s"%line)
                     continue
                 
@@ -185,7 +184,7 @@ class Kitchen(threading.Thread):
 
                 package_method_name = ''
                 for _i in range(method_name_index,len(str_list)):
-                    package_method_name += str_list[_i]
+                    package_method_name += str_list[_i] + ' '
 
                 org_line = line[:]
                 arguments_str = org_line.split("[args]")[1] if "[args]" in org_line else None
@@ -197,10 +196,14 @@ class Kitchen(threading.Thread):
                 parameters = None
                 if '' != inside_parenthesis:
                     parameters = inside_parenthesis.split(',')
-                method_name = list(reversed(parameter_removed .split(".")))[0]
-                package_name = ".".join(list(reversed(list(reversed(parameter_removed .split(".")))[1:])))
+                #method_name = list(reversed(parameter_removed .split(".")))[0]
+                return_type_removed = list(reversed(parameter_removed.split(' ')))
+                method_name = list(reversed(re.split('\\.|\\*|\\:\\:',parameter_removed)))[0]
+                package_name = ".".join(list(reversed(list(reversed(parameter_removed.split(".")))[1:])))
 
                 class_name = package_name
+                if class_name == '':
+                    class_name = 'Global'
 
                 if not (thread_id in self.threads):
                     self.threads.append(thread_id)

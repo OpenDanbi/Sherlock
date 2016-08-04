@@ -1,7 +1,10 @@
 import Aspecter
 
 def log_entry(method, *args, **kw):
+    list_desc = method.replace(' ','')
+
     print("[entry] %s" % method)
+    print(list_desc)
 
 def log_exit(result, *args, **kw):
     print("[exit] %s" % result)
