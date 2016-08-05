@@ -39,6 +39,7 @@ class SourceViewer(object):
 
         file_path = None
         search_str = None
+        byte_stuffing_search_str = None
         file_in = open("tags","r",encoding='utf-8',errors='ignore')
         for line in file_in:
             if message == (line.split())[0]:
@@ -50,5 +51,5 @@ class SourceViewer(object):
 
                 byte_stuffing_search_str = search_str.replace('*','\\*')
 
-        return file_path, byte_stuffing_search_str = search_str.replace('*','\\*')
+        return file_path, byte_stuffing_search_str
             
