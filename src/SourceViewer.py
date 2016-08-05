@@ -42,9 +42,13 @@ class SourceViewer(object):
         file_in = open("tags","r",encoding='utf-8',errors='ignore')
         for line in file_in:
             if message == (line.split())[0]:
-                if "class:" + module + "\n" in line or "interface:" + module + "\n" in line:
-                    file_path = line.split()[1]
-                    search_str = line.split("/^")[1].split("{$/;")[0]
+                file_path = line.split()[1]
+                search_str = line.split("/^")[1].split("$/;")[0]
+                #if "class:" + module + "\n" in line or "interface:" + module + "\n" in line:
+                #    file_path = line.split()[1]
+                #    search_str = line.split("/^")[1].split("$/;")[0]
 
-        return file_path, search_str
+                byte_stuffing_search_str = search_str.replace('*','\\*')
+
+        return file_path, byte_stuffing_search_str = search_str.replace('*','\\*')
             
