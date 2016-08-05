@@ -22,9 +22,11 @@ class ToolBox(QVBoxLayout):
 
         self.sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
 
-        self.groupBoxSearch = QGroupBox("Search messages")
+        self.groupBoxSearch = QGroupBox()
         self.groupBoxSearch.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 4px; };")
         vboxSearch = QVBoxLayout()
+        self.searchTitle = QLabel("Search Messages")
+        vboxSearch.addWidget(self.searchTitle)
         self.searchHLayout = QHBoxLayout()
         self.editTextSearch = QTextEdit('')
         self.editTextSearch.setFixedSize(200,30)
@@ -66,8 +68,8 @@ class ToolBox(QVBoxLayout):
             self.buttonCapture.clicked.connect(self.notifyCapture)
             self.addWidget(self.buttonCapture)
         self.msgRcv = []
-        self.msgInfo = QLabel()
-        self.groupBoxMessageInfo = QGroupBox("Message Info.")
+        self.msgInfo = QLabel("Message Info.")
+        self.groupBoxMessageInfo = QGroupBox()
         self.groupBoxMessageInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
         vbox = QVBoxLayout()
         vbox.addWidget(self.msgInfo)
@@ -106,15 +108,12 @@ class ToolBox(QVBoxLayout):
         self.buttonSrcView = QPushButton('view code')
         self.buttonSrcView.setFixedWidth(200)
         self.buttonSrcView.clicked.connect(self.openSourceViewer)
-        #vbox.addWidget(self.buttonSrcView)
         self.buttonHide = QPushButton('Hide')
         self.buttonHide.setFixedWidth(200)
         self.buttonHide.clicked.connect(self.notifyHide)
-        #vbox.addWidget(self.buttonHide)
         self.buttonHideAllMsg = QPushButton('Hide All')
         self.buttonHideAllMsg.setFixedWidth(200)
         self.buttonHideAllMsg.clicked.connect(self.hideAllMsgNamedAsSelected)
-        #vbox.addWidget(self.buttonHideAllMsg)
         self.groupBoxMessageInfo.setLayout(vbox)
         self.checkHideCircular = QCheckBox('Hide Circular Messages')
         self.checkHideCircular.setCheckState(QtCore.Qt.Unchecked)
@@ -212,7 +211,8 @@ class ToolBox(QVBoxLayout):
     def addThreadList(self,threads):
 
         if not self.groupBoxThreadInfo:
-            self.groupBoxThreadInfo = QGroupBox("Thread Info.")
+            self.groupBoxThreadInfo = QGroupBox()
+            self.threadInfo = QLabel("Thread Info.")
             self.groupBoxThreadInfo.setStyleSheet("QGroupBox {border: 1px solid gray; border-radius: 9px; margin-top: 0.5em} QGroupBox::title {subcontrol-origin: margin; left: 10px; padding: 0 3px 0 3px;")
 
         if not self.threadvbox:
@@ -224,6 +224,7 @@ class ToolBox(QVBoxLayout):
         self.listThread.setFixedWidth(200)
         self.listThread.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
         QtCore.QObject.connect(self.listThread, QtCore.SIGNAL("itemClicked(QListWidgetItem *)"), self.toggleThreadDisplay)
+        self.threadvbox.addWidget(self.threadInfo)
         self.threadvbox.addWidget(self.listThread)
         self.groupBoxThreadInfo.setLayout(self.threadvbox)
         self.addWidget(self.groupBoxThreadInfo)
