@@ -19,6 +19,7 @@ class Kitchen(threading.Thread):
 
     input_stream = None
     flagTerminate = False
+    STR_CLASS_SPLITTER = '\\.|\\*|\\:\\:'
    
     def __init__(self,mode,fileArg,cfgArg):
         threading.Thread.__init__(self)
@@ -198,8 +199,8 @@ class Kitchen(threading.Thread):
                     parameters = inside_parenthesis.split(',')
                 #method_name = list(reversed(parameter_removed .split(".")))[0]
                 return_type_removed = list(reversed(parameter_removed.split(' ')))
-                method_name = list(reversed(re.split('\\.|\\*|\\:\\:',parameter_removed)))[0]
-                package_name = ".".join(list(reversed(list(reversed(parameter_removed.split(".")))[1:])))
+                method_name = list(reversed(re.split(STR_CLASS_SPLITTER,parameter_removed)))[0]
+                package_name = ".".join(list(reversed(list(reversed(re.split(STR_CLASS_SPLITTER,parameter_removed)))[1:])))
 
                 class_name = package_name
                 if class_name == '':
