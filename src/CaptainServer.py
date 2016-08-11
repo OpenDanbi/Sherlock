@@ -439,6 +439,12 @@ class CaptainServer(object):
         """
         """
         return self.hideString
+
+    def getHiddenMessages(self):
+        """
+        Get hidden message list
+        """
+        return self.hideMessage
         
     def connectController(self,controller):
         """

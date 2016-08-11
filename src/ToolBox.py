@@ -257,7 +257,7 @@ class ToolBox(QVBoxLayout):
             self.diagramView.showLifelines(selected_items)
 
     def showHiddenMessages(self):
-        response, selected_items = HiddenMessageDialog.HiddenMessageDialog.getSelectedItems(self.diagramView.getHiddenCalls())
+        response, selected_items = HiddenMessageDialog.HiddenMessageDialog.getSelectedItems(self.diagramView.getHiddenMessages(),self.diagramView.getHiddenLifeLines())
         if response:
             self.diagramView.showLifelines(selected_items)
 
