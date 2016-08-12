@@ -310,20 +310,19 @@ class CaptainServer(object):
         Set a message as the highlighted message and display information on the message.
         """
         self.view.update()
+        if msg: 
+            hidden_call_flag, hidden_calls = self.getHiddenCalls(msg)
         
-        hidden_call_flag, hidden_calls = self.getHiddenCalls(msg)
-        
-        hidden_call_str = "\n"
-        for hc in hidden_calls:
-            hidden_call_str += hc['class'] + "\n"
+        #hidden_call_str = "\n"
+        #for hc in hidden_calls:
+        #    hidden_call_str += hc['class'] + "\n"
 
-        self.toolBox.setMessageInfoRet(msg['ret'])
-        self.toolBox.setMessageInfoArg(msg['params'],msg['args'])
-        self.toolBox.setMessageInfoTime(msg['time'],msg['endtime'],"%d"%(Utils.calcTimeConsumed(msg['time'],msg['endtime'])))
-        self.toolBox.setMsgInfoMessage(msg['message'])
-        self.toolBox.setMsgInfoModule(msg['dest'])
-
-        print(self.getHiddenCalls(msg))
+        if msg:
+            self.toolBox.setMessageInfoRet(msg['ret'])
+            self.toolBox.setMessageInfoArg(msg['params'],msg['args'])
+            self.toolBox.setMessageInfoTime(msg['time'],msg['endtime'],"%d"%(Utils.calcTimeConsumed(msg['time'],msg['endtime'])))
+            self.toolBox.setMsgInfoMessage(msg['message'])
+            self.toolBox.setMsgInfoModule(msg['dest'])
 
     def handleRelease(self,x,y):
         """
@@ -721,6 +720,14 @@ class CaptainServer(object):
         """
         for item in listLifelines:
             self.hideString.remove(item)
+        self.refreshData()
+        self.view.update()
+
+    def showMessages(self, msg):
+        """
+        """
+        selected = [x for x in self.hideMessage if x['messageindex'] == int(msg[0])]
+        self.hideMessage.remove(selected[0])
         self.refreshData()
         self.view.update()
 

@@ -62,13 +62,12 @@ class Kitchen(threading.Thread):
             self.mutex.acquire()
             if self.flagTerminate:
                 break
-            print("***** KITCHEN THREAD *****   ",self.stateInteractive)
+
             self.loadData()
             self.mutex.release()
             self.setInteractiveModeState(const.STATE_INTERACTIVE_ACTIVE)
 
     def loadData(self):
-        print("kitchen --> start loading")
 
         self.lifeLine.append("start")
         self.view.addLifeline("start")
@@ -120,7 +119,6 @@ class Kitchen(threading.Thread):
 
                 if False == match_flag:
                     print("REMOVE the line !!! -> %d" % idx)
-                    print(line)
                     idx_for_remove.append(idx)
 
         for _i in idx_for_remove:
@@ -230,11 +228,9 @@ class Kitchen(threading.Thread):
             del line
             self.cnt = index
 
-        print("kitchen --> refreshData")
         self.view.refreshData(self.cnt)
         self.view.setDrawingAvailable()
         self.toolBox.setAvailable(self.threads)
-        print("kitchen start")
         
     def activateHide(self,flag):
         pass
@@ -255,7 +251,6 @@ class Kitchen(threading.Thread):
         self.toolBox.notifyInteractiveStateChanged(state)
 
         if const.STATE_INTERACTIVE_RESET == state:
-            print("setInteractiveModeState : STATE_INTERACTIVE_RESET")
             if const.STATE_INTERACTIVE_ACTIVE != self.stateInteractive:
                 pass # throw exception
             self.view.reset()
@@ -264,20 +259,17 @@ class Kitchen(threading.Thread):
             self.mutex.release()
 
         if const.STATE_INTERACTIVE_ACTIVE == state:
-            print("setInteractiveModeState : STATE_INTERACTIVE_ACTIVE")
             if const.STATE_INTERACTIVE_PROCESSING != self.stateInteractive:
                 pass # throw exception
             self.stateInteractive = const.STATE_INTERACTIVE_ACTIVE
             self.mutex.acquire()
 
         if const.STATE_INTERACTIVE_PROCESSING == state:
-            print("setInteractiveModeState : STATE_INTERACTIVE_PROCESSING")
             if const.STATE_INTERACTIVE_CAPTURING != self.stateInteractive:
                 pass # throw exception
             self.stateInteractive = const.STATE_INTERACTIVE_PROCESSING
 
         if const.STATE_INTERACTIVE_CAPTURING == state:
-            print("setInteractiveModeState : STATE_INTERACTIVE_CAPTURING")
             if const.STATE_INTERACTIVE_IDLE != self.stateInteractive or const.STATE_INTERACTIVE_RESET != self.stateInteractive:
                 pass # throw exception
             self.stateInteractive = const.STATE_INTERACTIVE_CAPTURING

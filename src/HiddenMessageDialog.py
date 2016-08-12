@@ -34,5 +34,5 @@ class HiddenMessageDialog(QDialog):
     def getSelectedItems(msgList, parent = None):
         dialog = HiddenMessageDialog(msgList,parent)
         result = dialog.exec_()
-        return (result, [str(x.text()) for x in dialog.listHiddenMessages.selectedItems()])
+        return (result, [x.text() for x in dialog.listHiddenMessages.selectedItems()])
 

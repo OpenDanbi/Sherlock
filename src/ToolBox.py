@@ -1,5 +1,5 @@
 from PySide import QtCore, QtGui
-from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabel, QListWidget, QGroupBox, QCheckBox, QLineEdit, QInputDialog, QTableWidget, QTableWidgetItem
+from PySide.QtGui import QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit, QLabel, QListWidget, QGroupBox, QCheckBox, QLineEdit, QInputDialog, QTableWidget, QTableWidgetItem, QSizePolicy, QFrame
 
 import ClusterDialog
 import const
@@ -75,6 +75,13 @@ class ToolBox(QVBoxLayout):
         vbox.addWidget(self.msgInfo)
         self.tableTime = QtGui.QTableWidget(3,2)
         self.tableTime.setHorizontalHeaderLabels(['-','time'])
+        self.tableTime.setColumnWidth(0,80)
+        self.tableTime.setColumnWidth(1,150)
+        vwidth = self.tableTime.verticalHeader().length()
+        hwidth = self.tableTime.horizontalHeader().height()
+        fwidth = self.tableTime.frameWidth() * 2
+        self.tableTime.setFixedHeight(vwidth + hwidth + fwidth)
+        self.tableTime.horizontalHeader().setStretchLastSection(True)
         self.tableTime.setItem(0,0,QTableWidgetItem('begin'))
         self.tableTime.setItem(0,1,QTableWidgetItem(' - '))
         self.tableTime.setItem(1,0,QTableWidgetItem('end'))
@@ -92,6 +99,7 @@ class ToolBox(QVBoxLayout):
         for idx in range(0,max_arg_num):
             self.tableArgs.setItem(idx,0,QTableWidgetItem())
             self.tableArgs.setItem(idx,1,QTableWidgetItem())
+        self.tableArgs.horizontalHeader().setStretchLastSection(True)
         vbox.addWidget(self.tableArgs)
 
         self.titleArg = QLabel('Return Value List')
@@ -103,6 +111,11 @@ class ToolBox(QVBoxLayout):
         for idx in range(0,max_ret_num):
             self.tableRet.setItem(idx,0,QTableWidgetItem())
             self.tableRet.setItem(idx,1,QTableWidgetItem())
+        self.tableRet.horizontalHeader().setStretchLastSection(True)
+        vwidth = self.tableRet.verticalHeader().length()
+        hwidth = self.tableRet.horizontalHeader().height()
+        fwidth = self.tableRet.frameWidth() * 2
+        self.tableRet.setFixedHeight(vwidth + hwidth + fwidth)
         vbox.addWidget(self.tableRet)
 
         self.buttonSrcView = QPushButton('view code')
@@ -199,10 +212,10 @@ class ToolBox(QVBoxLayout):
 
     def toggleThreadDisplay(self,item):
         print(self.listThread.currentRow())
-        if item.isSelected():
-            print(item.text() + "  is selected")
-        else:
-            print(item.text() + "  is not selected")
+        #if item.isSelected():
+        #    print(item.text() + "  is selected")
+        #else:
+        #    print(item.text() + "  is not selected")
         self.diagramView.showThread(self.listThread.currentRow(),item.isSelected())
 
     def hideAllMsgNamedAsSelected(self):
@@ -259,7 +272,7 @@ class ToolBox(QVBoxLayout):
     def showHiddenMessages(self):
         response, selected_items = HiddenMessageDialog.HiddenMessageDialog.getSelectedItems(self.diagramView.getHiddenCalls())
         if response:
-            self.diagramView.showLifelines(selected_items)
+            self.diagramView.showMessages(selected_items)
 
     def notifyCapture(self):
         for rcv in self.msgRcv:

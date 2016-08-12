@@ -29,19 +29,15 @@ class MessageMenu(QtCore.QObject):
         self.diagramView = diagramView
 
     def hideOneMessage(self):
-        print("*** hideOneMessage")
         self.diagramView.activateHide(True)
 
     def hideAllMessage(self):
-        print("*** hideAllMessage")
         self.diagramView.hideAllMessageSelected()
 
     def openCodeViewer(self):
-        print("*** openCodeViewer")
         self.diagramView.openCodeViewer()
 
     def closeBody(self):
-        print("*** closeBody")
         self.diagramView.closeCurrentHighLightedBody()
 
     def createHeaderMenus(self):
