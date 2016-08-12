@@ -36,6 +36,10 @@ class Header(QLabel):
         self.groupAct.setStatusTip('Make a cluster of multiple life-lines')
         self.groupAct.triggered.connect(self.showClusterDialog)
 
+        self.scatterAct = QtGui.QAction('Scatter', self)
+        self.scatterAct.setStatusTip('Scatter this cluster')
+        self.scatterAct.triggered.connect(self.scatterCluster)
+
     def connectMainView(self,mainView):
         """
         mainView contains sequence diagram
@@ -57,7 +61,7 @@ class Header(QLabel):
                 self.selectedHeader = headInfo
                 menu = QtGui.QMenu()
                 if headInfo['flagCluster']:
-                    menu.addAction('Scatter')
+                    menu.addAction(self.scatterAct)
                 else:
                     menu.addAction(self.deleteAct)
                     menu.addAction(self.groupAct)
@@ -67,14 +71,15 @@ class Header(QLabel):
         response, cluster_name = ClusterDialog.ClusterDialog.getClusterName(self.mainView.getLifeLines(),self.selectedHeader['name'])
 
         if response:
-            print("cluster name is %s" % cluster_name)
             if self.mainView.createCluster(cluster_name):
                 pass
             else:
                 pass
+
+    def scatterCluster(self):
+        self.mainView.removeCluster(self.selectedHeader['name'])
         
     def hideLifeLine(self):
-        print("Remove %s" % self.selectedHeader['name']) 
         self.mainView.hideLifeline(self.selectedHeader['name'])
         self.mainView.refreshData()
 

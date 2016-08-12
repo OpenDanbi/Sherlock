@@ -183,6 +183,18 @@ class CaptainServer(object):
 
         return True
 
+    def removeCluster(self, name):
+        """
+        """
+        life_line = next((l for l in self.lifeLine if l.getClassName() == name),None)
+        self.lifeLine.remove(life_line)
+        cluster = next((l for l in self.cluster if l['name'] == name),None)
+        self.cluster.remove(cluster)
+
+        self.refreshClusters()
+        self.refreshData()
+        self.view.update()
+
     def hideCircularChanged(self,flag):
         """
         Circular message-line is a message that the caller and the callee is the same.
