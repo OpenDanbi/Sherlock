@@ -5,6 +5,7 @@ import ClusterDialog
 import const
 import HiddenDialog
 import HiddenMessageDialog
+import ShowLifeLineDialog
 
 class ToolBox(QVBoxLayout):
 
@@ -272,7 +273,13 @@ class ToolBox(QVBoxLayout):
     def showHiddenMessages(self):
         response, selected_items = HiddenMessageDialog.HiddenMessageDialog.getSelectedItems(self.diagramView.getHiddenMessages(),self.diagramView.getHiddenLifeLines())
         if response:
-            self.diagramView.showMessages(selected_items)
+            if selected_items[3] in self.diagramView.getHiddenLifeLines():
+                confirmation = ShowLifeLineDialog.ShowLifeLineDialog.confirmToShowLifeLine(selected_items[3])
+                if confirmation:
+                    self.diagramView.showLifelines([selected_items[3]])
+                    self.diagramView.showMessages(selected_items)
+            else:
+                self.diagramView.showMessages(selected_items)
 
     def notifyCapture(self):
         for rcv in self.msgRcv:
