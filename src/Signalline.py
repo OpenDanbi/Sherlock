@@ -52,8 +52,8 @@ class Signalline(object):
         qp.drawPolygon(needle)
 
         qp.setPen(colour)
-        font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
-        qp.setFont(font)
+        #font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
+        #qp.setFont(font)
         wd = QtGui.QFontMetrics(font).boundingRect("%d : %s"%(index,name)).width()
         qp.drawText(QtCore.QRect(pos+squarelineLen+margin,timePos+(squarelineLen-textHeight)/2,wd,15), QtCore.Qt.AlignCenter, "%d : %s"%(index,name)) 
 
@@ -100,8 +100,8 @@ class Signalline(object):
         qp.drawPolygon(needle)
 
         qp.setPen(colour)
-        font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
-        qp.setFont(font)
+        #font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
+        #qp.setFont(font)
 
         if True == hiddenFlag:
             text_from = d_posFrom
@@ -118,7 +118,8 @@ class Signalline(object):
 
             text_from = (d_posTo+d_posFrom)/2 + multi_msg_margin
             text_to = d_posTo
-            wd = QtGui.QFontMetrics(font).boundingRect(hidden_call_text).width()
+            #wd = QtGui.QFontMetrics(font).boundingRect(hidden_call_text).width()
+            wd = QtGui.QFontMetrics(font).boundingRect("%d : %s" % (index,name)).width()
             clipped_text_begin_pos = ((text_from+text_to)-wd)/2
             if text_to > text_from:
                 clipped_text_begin_pos = text_from if clipped_text_begin_pos < text_from else clipped_text_begin_pos
