@@ -27,7 +27,7 @@ class Signalline(object):
                 self.drawCircularLine(departure,timePos,colour,name,qp,depth,highlight,index)
             qp.end()
         
-        self.view.update()
+        #self.view.update()
 
     def drawCircularLine(self,lifeLine,timePos,colour,name,qp,depth,highlight,index):
 
