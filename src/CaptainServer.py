@@ -472,11 +472,13 @@ class CaptainServer(object):
         """
         """
         self.pos_x = x
+        self.view.update()
 
     def setPositionVer(self, y):
         """
         """
         self.pos_y = y
+        self.view.update()
 
     def decisionOnMsgShow(self,departure,destination,message):
         """
