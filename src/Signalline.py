@@ -54,7 +54,7 @@ class Signalline(object):
         qp.setPen(colour)
         font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
         qp.setFont(font)
-        wd = QtGui.QFontMetrics(font).boundingRect("%d : %s"%(index,name)).width()
+        wd = QtGui.QFontMetrics(font).boundingRect(" %d : %s "%(index,name)).width()
         qp.drawText(QtCore.QRect(pos+squarelineLen+margin,timePos+(squarelineLen-textHeight)/2,wd,15), QtCore.Qt.AlignCenter, "%d : %s"%(index,name)) 
 
     def drawStraightLine(self,departure,destination,timePos,colour,name,qp,depth,screenPosX,highlight,hiddenFlag,hiddenCallList,index):
@@ -107,7 +107,7 @@ class Signalline(object):
             text_from = d_posFrom
             text_to = (d_posTo+d_posFrom)/2 - multi_msg_margin
             hidden_call_text = hiddenCallList[-1]['message']
-            wd = QtGui.QFontMetrics(font).boundingRect(hidden_call_text).width()
+            wd = QtGui.QFontMetrics(font).boundingRect(" %s " % hidden_call_text).width()
             clipped_text_begin_pos = ((text_from+text_to)-wd)/2
             if text_to > text_from:
                 clipped_text_begin_pos = text_to - wd if clipped_text_begin_pos > text_to - wd else clipped_text_begin_pos
@@ -118,8 +118,7 @@ class Signalline(object):
 
             text_from = (d_posTo+d_posFrom)/2 + multi_msg_margin
             text_to = d_posTo
-            #wd = QtGui.QFontMetrics(font).boundingRect(hidden_call_text).width()
-            wd = QtGui.QFontMetrics(font).boundingRect("%d : %s" % (index,name)).width()
+            wd = QtGui.QFontMetrics(font).boundingRect(" %d : %s " % (index,name)).width()
             clipped_text_begin_pos = ((text_from+text_to)-wd)/2
             if text_to > text_from:
                 clipped_text_begin_pos = text_from if clipped_text_begin_pos < text_from else clipped_text_begin_pos
@@ -128,7 +127,7 @@ class Signalline(object):
                 
             qp.drawText(QtCore.QRect(clipped_text_begin_pos,timePos-5-15,wd,15), QtCore.Qt.AlignCenter, "%d : %s"%(index,name))
         else:
-            wd = QtGui.QFontMetrics(font).boundingRect("%d : %s"%(index,name)).width()
+            wd = QtGui.QFontMetrics(font).boundingRect(" %d : %s "%(index,name)).width()
             qp.drawText(QtCore.QRect(((d_posFrom+d_posTo)-wd)/2,timePos-5-15,wd,15), QtCore.Qt.AlignCenter, "%d : %s"%(index,name)) 
 
     def drawWave(self,qp,posTo,posFrom,timePos,margin,colour,pen_width):
