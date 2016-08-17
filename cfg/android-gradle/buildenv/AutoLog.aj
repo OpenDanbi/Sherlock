@@ -8,7 +8,7 @@ public aspect AutoLog {
     pointcut privateMethods() : execution(private * *..*(..));
     pointcut allMethods() : execution(* *..*(..));
     pointcut logObjectCalls() : execution(* Prof.*(..));
-    pointcut loggableCalls() : allMethods() && logObjectCalls();
+    pointcut loggableCalls() : allMethods() && ! logObjectCalls();
 
     before() : loggableCalls() {
         Signature sig = thisJoinPoint.getSignature();
