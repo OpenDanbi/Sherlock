@@ -52,8 +52,8 @@ class Signalline(object):
         qp.drawPolygon(needle)
 
         qp.setPen(colour)
-        #font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
-        #qp.setFont(font)
+        font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
+        qp.setFont(font)
         wd = QtGui.QFontMetrics(font).boundingRect("%d : %s"%(index,name)).width()
         qp.drawText(QtCore.QRect(pos+squarelineLen+margin,timePos+(squarelineLen-textHeight)/2,wd,15), QtCore.Qt.AlignCenter, "%d : %s"%(index,name)) 
 
@@ -100,8 +100,8 @@ class Signalline(object):
         qp.drawPolygon(needle)
 
         qp.setPen(colour)
-        #font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
-        #qp.setFont(font)
+        font = QtGui.QFont('Decorative', 10, QFont.Bold if True == highlight else QFont.Normal)
+        qp.setFont(font)
 
         if True == hiddenFlag:
             text_from = d_posFrom
