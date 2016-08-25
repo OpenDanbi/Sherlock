@@ -21,7 +21,10 @@ class Aspecter(type):
         def call(*args, **kw):
             day = datetime.date.today()
             t = datetime.datetime.now().time()
-            print("%s %s %s [entry] %s" % (cls.LOG_TAG,day.isoformat(),t.isoformat(),method.__name__))
+            arg_str = '[args]' if len(args) > 1 else None
+            for idx in range(1,len(args)):
+                arg_str += args[idx] + ',,'
+            print("%s %s %s [entry] %s %s" % (cls.LOG_TAG,day.isoformat(),t.isoformat(),method.__name__,arg_str))
             results = method(*args, **kw)
             print("%s %s %s [exit] %s" % (cls.LOG_TAG,day.isoformat(),t.isoformat(),method.__name__))
             return results
