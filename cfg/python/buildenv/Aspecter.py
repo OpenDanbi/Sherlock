@@ -1,7 +1,10 @@
 import re
+import datetime
 
 class Aspecter(type):
     aspect_rules = []
+    LOG_TAG = 'SHERLOCK/PROFILING/BEHAVIOUR'
+
     def __new__(cls, name, bases, dict):
         for key, value in dict.items():
             if hasattr(value, "__call__") and key != "__metaclass__":
@@ -16,9 +19,11 @@ class Aspecter(type):
     @classmethod
     def wrap_method(cls, method):
         def call(*args, **kw):
-            print("[entry] %s" % method)
+            day = datetime.date.today()
+            t = datetime.datetime.now().time()
+            print("%s %s %s [entry] %s" % (cls.LOG_TAG,day.isoformat(),t.isoformat(),method.__name__))
             results = method(*args, **kw)
-            print("[exit] %s" % method)
+            print("%s %s %s [exit] %s" % (cls.LOG_TAG,day.isoformat(),t.isoformat(),method.__name__))
             return results
         return call
 
