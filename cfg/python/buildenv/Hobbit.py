@@ -1,14 +1,5 @@
 import Aspecter
 
-def log_entry(method, *args, **kw):
-    list_desc = method.replace(' ','')
-
-    print("[entry] %s" % method)
-    print(list_desc)
-
-def log_exit(result, *args, **kw):
-    print("[exit] %s" % result)
-
 class Hobbit(object):
     __metaclass__ = Aspecter.Aspecter
 
@@ -28,5 +19,5 @@ class Hobbit(object):
         elif 'run' == cmdType:
             receiver.run()
 
-Aspecter.Aspecter.register(name_pattern="^.*", pre_function=log_entry, post_function=log_exit)
+Aspecter.Aspecter.register(name_pattern="^.*")
 
