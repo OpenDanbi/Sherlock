@@ -31,7 +31,7 @@ class SourceViewer(object):
     def openViewer(self, module, message):
         module_str = module.split(".")
         file_path, search_str = self.findOneMsgInTags(module_str[-1], message.split("(")[0])
-        cmd_str = ['gvim',file_path,'-c',"/" + search_str]
+        cmd_str = ['mvim',file_path,'-c',"/" + search_str]
         print(cmd_str)
         call(cmd_str)
 

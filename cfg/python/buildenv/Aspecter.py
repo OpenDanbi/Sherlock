@@ -30,3 +30,15 @@ class Aspecter(type):
             return results
         return call
 
+def loggable(method):
+    def wrapAndCall(*args, **kw):
+        day = datetime.date.today()
+        t = datetime.datetime.now().time()
+        arg_str = '[args]' if len(args) > 0 else None
+        for idx in range(0,len(args)):
+            arg_str += args[idx] + ',,'
+        print("%s %s %s [entry] %s %s" % (Aspecter.LOG_TAG, day.isoformat(), t.isoformat(), method.__name__, arg_str))
+        result = method(*args, **kw)
+        print("%s %s %s [exit] %s" % (Aspecter.LOG_TAG, day.isoformat(), t.isoformat(), method.__new__))
+        return results
+    return wrapAndCall
